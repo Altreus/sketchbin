@@ -1,12 +1,20 @@
 var Canvas = new (function(){
     var self = this;
-    this.mode = function(mode) {
+    var mousePos = {};
+
+    self.mode = function(mode) {
         self.clickZone.click(function(e) {
-            debugger;
+            self.beginLine(e.offsetX, e.offsetY);
         });
     };
-    this.beginLine = function(x,y) {
-            
+    self.beginLine = function(x,y) {
+        var l = self.paper.path("M" + x + " " + y + "L" + x + " " + y)
+            .attr({ stroke: "rgb(0,0,0)", "stroke-width": 1 });
+
+        self.clickZone.mousemove(function(e) {
+            l.attr({ path: "M" + x + " " + y + "L" + e.offsetX + " " +
+                e.offsetY });
+        });
     };
 })();
 
