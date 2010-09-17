@@ -100,7 +100,6 @@
 
         // events
         t.ring.drag(function (dx, dy, x, y) {
-            debugger;
             t.docOnMove(dx, dy, x, y);
         }, function (x, y) {
             t.hsbOnTheMove = true;
