@@ -5,6 +5,24 @@
         type="text/javascript"></script>
         <script src="/raphael.js" type="text/javascript"></script>
         <script src="/browser.js" type="text/javascript"></script>
+        <script src="/colorwheel.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            $(function() {
+                var cp =
+                  Raphael.colorwheel(0, 0, 300, "#FFF",
+                    document.getElementById('colourpicker'));
+
+                cp.onchange = function (clr) {
+                    $('#colour').val(clr.replace(/#(..)(..)(..)/, "#$1$2$3"));
+                };
+            });
+        </script>
+
+        <style type="text/css">
+            #spare-tool-settings {
+                display:none;
+            }
+        </style>
     </head>
     <body>
         <h1>Sketchbin!</h1>
@@ -18,6 +36,37 @@
             </ul>
         </div>
         <div id="tool-settings">
+        </div>
+
+        <div id="colour-picker-holder">
+            <h1>Colour</h1>
+            <div id="colourpicker"></div>
+            <p><input name="colour" id="colour" type="text" value="#FFFFFF"></p>
+        </div>
+
+        <div id="spare-tool-settings">
+            <fieldset id="inputs-position">
+                <h1>Location</h1>
+                <p><label for="x">x</label><input id="x" name="x" type"text"></p>
+                <p><label for="y">y</label><input id="y" name="y" type"text"></p>
+            </fieldset>
+
+            <fieldset id="inputs-stroke">
+                <h1>Stroke</h1>
+                <p><label for="stroke-width">width</label>
+                    <input id="stroke-width" name="stroke-width" type"text">
+                </p>
+                <p><label for="line-caps">line caps</label>
+                    <select id="line-caps" name="line-caps">
+                        <option value="butt">Butt</option>
+                        <option value="square">Square</option>
+                        <option value="round">Round</option>
+                    </select>
+                </p>
+                <p><label for="stroke-colour">colour</label>
+                    <input id="stroke-colour" name="stroke-colour" type"text">
+                </p>
+            </fieldset>
         </div>
     </body>
 </html>
