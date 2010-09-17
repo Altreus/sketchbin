@@ -6,6 +6,7 @@ var connect = require('connect'),
     fs = require('fs');
 
 var raphael = fs.readFileSync(__dirname + '/raphael-min.js');
+var colourwheel = fs.readFileSync(__dirname + '/js/colorwheel.js');
 var html = { index : fs.readFileSync(__dirname + '/index.html') };
 
 function bundleScript () {
@@ -30,6 +31,10 @@ server = connect.createServer(
         else if (req.url == '/raphael.js') {
             res.writeHead(200, { 'Content-Type' : 'text/javascript' });
             res.end(raphael);
+        }
+        else if (req.url == '/colorwheel.js') {
+            res.writeHead(200, { 'Content-Type' : 'text/javascript' });
+            res.end(colourwheel);
         }
         else {
             res.writeHead(200, { 'Content-Type' : 'text/html' });
