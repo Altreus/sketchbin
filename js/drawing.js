@@ -34,7 +34,11 @@ var Canvas = (function(element,_h,_w){
     self.beginLine = function(x,y) {
         var p = new Path(x,y);
         var l = paper.path(p.svgString());
-        l.attr({ stroke: "rgb(0,0,0)", "stroke-width": 1 });
+        l.attr({ 
+            stroke: $('#stroke-colour').val(), 
+            "stroke-width": $('#stroke-width').val(),
+            "stroke-linecap": $('#line-caps').val()
+        });
 
         // If we click the line by accident it should act as though we'd clicked
         // the canvas, which is easy if we don't worry about mouse location.
