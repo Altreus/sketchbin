@@ -1,0 +1,21 @@
+Sketchbin v0.00.0001_3
+
+Sketchbin is like pastebin except you draw pictures instead of pasting code.
+
+Clone and run
+
+  node server.js
+
+then point your browser to localhost:3000
+
+Currently only the line tool works by any measure. Click on "Line" to use it.
+
+BUGS and TODO:
+
+The canvas itself has all the listeners for events on it. This means that many
+events are not fired while actually drawing. This means drawing wide lines is
+jerky; it also means you can't start a line while pointing at another line.
+
+I think I know how to deal with them :)
+
+Everything else is a todo, including a select tool.
