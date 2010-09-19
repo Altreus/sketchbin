@@ -10,7 +10,7 @@ var colourwheel = fs.readFileSync(__dirname + '/js/colorwheel.js');
 var html = { index : fs.readFileSync(__dirname + '/index.html') };
 
 function bundleScript () {
-    return ('js/path js/drawing js/tools')
+    return ('js/path js/shape js/drawing js/tools')
         .split(/\s+/).map(function (filename) {
             var file = __dirname + '/' + filename + '.js';
             var src = fs.readFileSync(file).toString()
