@@ -3,6 +3,9 @@ $(function() {
         showLineToolSettings();
         drawCanvas.mode('line');
     });
+    $('#shape').click(function(e) {
+        drawCanvas.mode('rect');
+    });
 });
 
 function showLineToolSettings() {
