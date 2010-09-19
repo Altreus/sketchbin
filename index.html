@@ -47,14 +47,14 @@
         <div id="spare-tool-settings">
             <fieldset id="inputs-position">
                 <h1>Location</h1>
-                <p><label for="x">x</label><input id="x" name="x" type"text"></p>
-                <p><label for="y">y</label><input id="y" name="y" type"text"></p>
+                <p><label for="x">x</label><input id="x" name="x" type="text"></p>
+                <p><label for="y">y</label><input id="y" name="y" type="text"></p>
             </fieldset>
 
             <fieldset id="inputs-stroke">
                 <h1>Stroke</h1>
                 <p><label for="stroke-width">width</label>
-                    <input id="stroke-width" name="stroke-width" type"text"
+                    <input id="stroke-width" name="stroke-width" type="text"
                         value="1">
                 </p>
                 <p><label for="line-caps">line caps</label>
@@ -65,7 +65,33 @@
                     </select>
                 </p>
                 <p><label for="stroke-colour">colour</label>
-                    <input id="stroke-colour" name="stroke-colour" type"text">
+                    <input id="stroke-colour" name="stroke-colour" type="text">
+                </p>
+            </fieldset>
+
+            <fieldset id="inputs-fill">
+                <h1>Fill</h1>
+                <p><label for="fill-colour">colour</label>
+                    <input id="fill-colour" name="fill-colour" type="text">
+                </p>
+            </fieldset>
+
+            <fieldset id="inputs-shape">
+                <h1>Shape</h1>
+                <p> <select id="shape-selector" name="shape-selector" >
+                        <option value="ellipse">Ellipse</option>
+                        <option value="rect">Rectangle</option>
+                        <option value="ngon">N-Gon</option>
+                    </select>
+                </p>
+            </fieldset>
+            <fieldset id="inputs-shape">
+                <h1>Shape</h1>
+                <p> <select id="shape-selector" name="shape-selector" >
+                        <option value="ellipse">Ellipse</option>
+                        <option value="rect">Rectangle</option>
+                        <option value="ngon">N-Gon</option>
+                    </select>
                 </p>
             </fieldset>
         </div>
