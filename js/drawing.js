@@ -26,9 +26,18 @@ var Canvas = (function(element,_h,_w){
     });
 
     self.mode = function(mode) {
-        handlers.click = function(e) {
-            self.beginLine(e.offsetX, e.offsetY);
-        };
+        switch (mode) {
+            case 'line':
+                handlers.click = function(e) {
+                    self.beginLine(e.offsetX, e.offsetY);
+                };
+                break;
+            case 'rect':
+                handlers.click = function(e) {
+                    self.beginRect(e.offsetX, e.offsetY,0,0);
+                };
+                break;
+        }
     };
 
     self.beginLine = function(x,y) {
@@ -58,7 +67,35 @@ var Canvas = (function(element,_h,_w){
             p.moveNode(-1, e.offsetX, e.offsetY);
             l.attr({ path: p.svgString() });
         };
-        
+    };
+
+    self.beginRect = function(x,y,h,w) {
+        var R = new Rect(x,y,h,w);
+        var r = paper.rect(x,y,h,w);
+        r.attr({  stroke: "rgb(0,0,0)", "stroke-width": 1 });
+
+        r.click( function(e) { R.click(e); } );
+        r.mousemove( function(e) { R.mousemove(e); } );
+
+        R.click =
+        handlers.click = function(e) {
+            R.click = function(){};
+            R.mousemove = function(){};
+
+            self.mode('rect'); 
+            handlers.mousemove = function(){};
+        };
+
+        R.mousemove =
+        handlers.mousemove = function(e) {
+            R.resize(e.offsetY - R.y, e.offsetX - R.x);
+            r.attr({ 
+                x: R.x, 
+                y: R.y, 
+                height: R.h, 
+                width: R.w 
+            });
+        };
     };
 });
 
