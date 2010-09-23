@@ -98,11 +98,19 @@ var Canvas = (function(element,_h,_w){
         R.mousemove =
         handlers.mousemove = function(e) {
             R.resize(e.offsetY - R.y, e.offsetX - R.x);
+            var y = R.y, x = R.x;
+
+            if (R.h < 0)
+                y += R.h;
+
+            if (R.w < 0)
+                x += R.w;
+
             r.attr({ 
-                x: R.x, 
-                y: R.y, 
-                height: R.h, 
-                width: R.w 
+                x: x + 0.5, 
+                y: y + 0.5, 
+                height: Math.abs(R.h),
+                width: Math.abs(R.w)
             });
         };
     };
