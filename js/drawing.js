@@ -37,6 +37,11 @@ var Canvas = (function(element,_h,_w){
                     self.beginRect(e.offsetX, e.offsetY,0,0);
                 };
                 break;
+            case 'ellipse':
+                handlers.click = function(e) {
+                    self.beginEllipse(e.offsetX, e.offsetY,0,0);
+                };
+                break;
         }
     };
 
@@ -94,6 +99,35 @@ var Canvas = (function(element,_h,_w){
                 y: R.y, 
                 height: R.h, 
                 width: R.w 
+            });
+        };
+    };
+
+    self.beginEllipse = function(x,y,r1,r2) {
+        var E = new Ellipse(x,y,r1,r2);
+        var el = paper.ellipse(x,y,r1,r2);
+        el.attr({  stroke: "rgb(0,0,0)", "stroke-width": 1 });
+
+        el.click( function(e) { E.click(e); } );
+        el.mousemove( function(e) { E.mousemove(e); } );
+
+        E.click =
+        handlers.click = function(e) {
+            E.click = function(){};
+            E.mousemove = function(){};
+
+            self.mode('ellipse'); 
+            handlers.mousemove = function(){};
+        };
+
+        E.mousemove =
+        handlers.mousemove = function(e) {
+            E.resize(e.offsetX, e.offsetY);
+            el.attr({ 
+                x: E.x, 
+                y: E.y, 
+                rx: E.rx,
+                ry: E.ry 
             });
         };
     };
