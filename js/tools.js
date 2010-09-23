@@ -4,7 +4,8 @@ $(function() {
         drawCanvas.mode('line');
     });
     $('#shape').click(function(e) {
-        drawCanvas.mode('rect');
+        showShapeToolSettings();
+        drawCanvas.mode('shape');
     });
 });
 
@@ -14,4 +15,13 @@ function showLineToolSettings() {
     div.find('fieldset').appendTo($('#spare-tools-settings'));
 
     $('#inputs-stroke').appendTo(div);
+}
+
+function showShapeToolSettings() {
+    var div = $('#tool-settings');
+
+    div.find('fieldset').appendTo($('#spare-tools-settings'));
+
+    $('#inputs-stroke').appendTo(div);
+    $('#inputs-shape').appendTo(div);
 }
