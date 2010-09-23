@@ -56,6 +56,14 @@ var Canvas = (function(element,_h,_w){
         handlers.obj.dblclick = defaultFns.obj.dblclick;
         handlers.obj.mousemove = defaultFns.obj.mousemove;
     };
+
+    var getStrokeInfo = function() {
+        return {
+            stroke: $('#stroke-colour').val(), 
+            "stroke-width": $('#stroke-width').val(),
+            "stroke-linecap": $('#line-caps').val()
+        };
+    };
     self.mode = function(mode) {
         switch (mode) {
             case 'line':
@@ -64,16 +72,16 @@ var Canvas = (function(element,_h,_w){
                     self.beginLine(e.offsetX, e.offsetY);
                 };
                 break;
-            case 'rect':
+            case 'shape':
                 handlers.paper.click =
                 handlers.obj.click = function(e) {
-                    self.beginRect(e.offsetX, e.offsetY,0,0);
-                };
-                break;
-            case 'ellipse':
-                handlers.paper.click =
-                handlers.obj.click = function(e) {
-                    self.beginEllipse(e.offsetX, e.offsetY,0,0);
+                    var type = $('#shape-selector').val();
+                    if (type == 'rect') {
+                        self.beginRect(e.offsetX, e.offsetY,0,0);
+                    }
+                    else if (type == 'ellipse') {
+                        self.beginEllipse(e.offsetX, e.offsetY,0,0);
+                    }
                 };
                 break;
         }
@@ -82,11 +90,7 @@ var Canvas = (function(element,_h,_w){
     self.beginLine = function(x,y) {
         var p = new Path(x,y);
         var l = paper.path(p.svgString());
-        l.attr({ 
-            stroke: $('#stroke-colour').val(), 
-            "stroke-width": $('#stroke-width').val(),
-            "stroke-linecap": $('#line-caps').val()
-        });
+        l.attr(getStrokeInfo());
  
         // set it up so that clicking this line calls the handler on the Path
         l.click(function(e) { p.click(e); });
@@ -134,7 +138,7 @@ var Canvas = (function(element,_h,_w){
     self.beginRect = function(x,y,h,w) {
         var R = new Rect(x,y,h,w);
         var r = paper.rect(x,y,h,w);
-        r.attr({  stroke: "rgb(0,0,0)", "stroke-width": 1 });
+        r.attr($.extend({}, getStrokeInfo()));
 
         r.click( function(e) { R.click(e); } );
         r.mousemove( function(e) { R.mousemove(e); } );
@@ -148,7 +152,16 @@ var Canvas = (function(element,_h,_w){
             resetDefaultObjFns();
             resetDefaultPaperFns();
 
-            self.mode('rect'); 
+            self.mode('shape'); 
+            R.click = function(e) {
+                handlers.obj.click(e);
+            }
+            R.dblclick = function(e) {
+                handlers.obj.dblclick(e);
+            }
+            R.mousemove = function(e) {
+                handlers.obj.mousemove(e);
+            }
         };
 
         R.mousemove =
@@ -175,7 +188,7 @@ var Canvas = (function(element,_h,_w){
     self.beginEllipse = function(x,y,r1,r2) {
         var E = new Ellipse(x,y,r1,r2);
         var el = paper.ellipse(x,y,r1,r2);
-        el.attr({  stroke: "rgb(0,0,0)", "stroke-width": 1 });
+        el.attr($.extend({}, getStrokeInfo()));
 
         el.click( function(e) { E.click(e); } );
         el.mousemove( function(e) { E.mousemove(e); } );
@@ -189,7 +202,16 @@ var Canvas = (function(element,_h,_w){
             resetDefaultObjFns();
             resetDefaultPaperFns();
 
-            self.mode('ellipse'); 
+            self.mode('shape'); 
+            E.click = function(e) {
+                handlers.obj.click(e);
+            }
+            E.dblclick = function(e) {
+                handlers.obj.dblclick(e);
+            }
+            E.mousemove = function(e) {
+                handlers.obj.mousemove(e);
+            }
         };
 
         E.mousemove =
