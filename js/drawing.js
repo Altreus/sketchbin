@@ -1,10 +1,31 @@
 var Canvas = (function(element,_h,_w){
     var self = this,
         mousePos = {},
+        // There is a handler for each of the paper, any object, and
+        // the object currently being edited.
         handlers = {
-            click: function(e){},
-            dblclick: function(e){},
-            mousemove: function(e){}
+            paper: {
+                click: function(e){},
+                dblclick: function(e){},
+                mousemove: function(e){}
+            },
+            obj: {
+                click: function(e){},
+                dblclick: function(e){},
+                mousemove: function(e){}
+            }
+        },
+        defaultFns = {
+            paper: {
+                click: function(e){},
+                dblclick: function(e){},
+                mousemove: function(e){}
+            },
+            obj: {
+                click: function(e){},
+                dblclick: function(e){},
+                mousemove: function(e){}
+            }
         },
         paper,
         clickZone;
@@ -16,29 +37,42 @@ var Canvas = (function(element,_h,_w){
                           });
 
     clickZone.click(function(e) {
-        handlers.click(e);
+        handlers.paper.click(e);
     });
     clickZone.dblclick(function(e) {
-        handlers.dblclick(e);
+        handlers.paper.dblclick(e);
     });
     clickZone.mousemove(function(e){
-        handlers.mousemove(e);
+        handlers.paper.mousemove(e);
     });
 
+    var resetDefaultPaperFns = function() {
+        handlers.paper.click = defaultFns.paper.click;
+        handlers.paper.dblclick = defaultFns.paper.dblclick;
+        handlers.paper.mousemove = defaultFns.paper.mousemove;
+    };
+    var resetDefaultObjFns = function() {
+        handlers.obj.click = defaultFns.obj.click;
+        handlers.obj.dblclick = defaultFns.obj.dblclick;
+        handlers.obj.mousemove = defaultFns.obj.mousemove;
+    };
     self.mode = function(mode) {
         switch (mode) {
             case 'line':
-                handlers.click = function(e) {
+                handlers.paper.click =
+                handlers.obj.click = function(e) {
                     self.beginLine(e.offsetX, e.offsetY);
                 };
                 break;
             case 'rect':
-                handlers.click = function(e) {
+                handlers.paper.click =
+                handlers.obj.click = function(e) {
                     self.beginRect(e.offsetX, e.offsetY,0,0);
                 };
                 break;
             case 'ellipse':
-                handlers.click = function(e) {
+                handlers.paper.click =
+                handlers.obj.click = function(e) {
                     self.beginEllipse(e.offsetX, e.offsetY,0,0);
                 };
                 break;
@@ -53,26 +87,45 @@ var Canvas = (function(element,_h,_w){
             "stroke-width": $('#stroke-width').val(),
             "stroke-linecap": $('#line-caps').val()
         });
+ 
+        // set it up so that clicking this line calls the handler on the Path
+        l.click(function(e) { p.click(e); });
+        l.dblclick(function(e){ p.dblclick(e) });
+        l.mousemove(function(e){ p.mousemove(e) });
 
         // If we click the line by accident it should act as though we'd clicked
         // the canvas, which is easy if we don't worry about mouse location.
         p.click =
-        handlers.click = function(e) {
+        handlers.obj.click = 
+        handlers.paper.click = function(e) {
             p.addNode();
             l.attr({ path: p.svgString() });
         };
- 
-        // set it up so that clicking this line calls the handler on the Path
-        l.click(function(e) { p.click(e); });
 
         p.dblclick = 
-        handlers.dblclick = function(e) {
-            self.mode('line');
-            handlers.mousemove = function(e){};
-        };
-        l.dblclick(function(e){ p.dblclick(e) });
+        handlers.obj.dblclick =
+        handlers.paper.dblclick = function(e) {
+            resetDefaultObjFns();
+            resetDefaultPaperFns();
 
-        handlers.mousemove = function(e) {
+            self.mode('line');
+            // Set it up so that when the line is committed, we can change the
+            // click handler for all objects at the same time, since I envisage
+            // no situation where clicking will depend on what object it was.
+            p.click = function(e) {
+                handlers.obj.click(e);
+            }
+            p.dblclick = function(e) {
+                handlers.obj.dblclick(e);
+            }
+            p.mousemove = function(e) {
+                handlers.obj.mousemove(e);
+            }
+        };
+
+        p.mousemove =
+        handlers.obj.mousemove =
+        handlers.paper.mousemove = function(e) {
             p.moveNode(-1, e.offsetX, e.offsetY);
             l.attr({ path: p.svgString() });
         };
@@ -87,16 +140,20 @@ var Canvas = (function(element,_h,_w){
         r.mousemove( function(e) { R.mousemove(e); } );
 
         R.click =
-        handlers.click = function(e) {
+        handlers.obj.click =
+        handlers.paper.click = function(e) {
             R.click = function(){};
             R.mousemove = function(){};
 
+            resetDefaultObjFns();
+            resetDefaultPaperFns();
+
             self.mode('rect'); 
-            handlers.mousemove = function(){};
         };
 
         R.mousemove =
-        handlers.mousemove = function(e) {
+        handlers.obj.mousemove =
+        handlers.paper.mousemove = function(e) {
             R.resize(e.offsetY - R.y, e.offsetX - R.x);
             var y = R.y, x = R.x;
 
@@ -124,16 +181,20 @@ var Canvas = (function(element,_h,_w){
         el.mousemove( function(e) { E.mousemove(e); } );
 
         E.click =
-        handlers.click = function(e) {
+        handlers.obj.click =
+        handlers.paper.click = function(e) {
             E.click = function(){};
             E.mousemove = function(){};
 
+            resetDefaultObjFns();
+            resetDefaultPaperFns();
+
             self.mode('ellipse'); 
-            handlers.mousemove = function(){};
         };
 
         E.mousemove =
-        handlers.mousemove = function(e) {
+        handlers.obj.mousemove =
+        handlers.paper.mousemove = function(e) {
             E.resize(e.offsetX, e.offsetY);
             el.attr({ 
                 x: E.x, 
